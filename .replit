@@ -4,3 +4,8 @@ modules = ["clojure-1.11"]
 
 [nix]
 channel = "stable-24_05"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
+exposeLocalhost = true
