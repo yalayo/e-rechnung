@@ -1,5 +1,5 @@
 (ns app.invoicepdf.core
-	(:require [app.invoicerules.interface :refer create-session]
+	(:require [app.invoicerules.interface :refer [create-session]]
 						[clj-pdf.core :as pdf]
 						[clojure.data.xml :as xml]
 						[pdfboxing.merge :as pdfbox]))
