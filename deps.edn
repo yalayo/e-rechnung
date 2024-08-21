@@ -1,0 +1,37 @@
+{:aliases {:dev {:extra-paths ["development/src"
+                               "bases/server/src"
+                               "components/invoicerules/src"
+                               "components/invoicepdf/src"
+                               "components/html/src"
+                               "components/web/src"]
+                 :extra-deps {io.pedestal/pedestal.service {:mvn/version "0.5.9"}
+                              io.pedestal/pedestal.route {:mvn/version "0.5.9"}
+                              io.pedestal/pedestal.immutant {:mvn/version "0.5.9"}
+                              hiccup/hiccup {:mvn/version "2.0.0-RC3"}
+                              org.clojure/data.xml {:mvn/version "0.0.8"}
+                              pdfboxing/pdfboxing {:mvn/version "0.1.14"}
+                              clj-pdf/clj-pdf {:mvn/version "2.6.8"}
+                              net.sekao/odoyle-rules {:mvn/version "1.1.0"}}}
+           :test {:extra-paths ["bases/server/test"
+                                "components/invoicerules/test"
+                                "components/invoicepdf/test"
+                                "components/html/test"
+                                "components/web/test"]
+                  :extra-deps {polylith-kaocha/kaocha-wrapper
+                               {:git/url "https://github.com/imrekoszo/polylith-kaocha"
+                                :git/tag "v0.8.2"
+                                :git/sha "d1fcd40"
+                                :deps/root "projects/kaocha-wrapper"}
+                               org.clojure/test.check {:mvn/version "1.1.1"}}}
+           
+           :poly {:main-opts ["-m" "polylith.clj.core.poly-cli.core"]
+                  :extra-deps {polylith/clj-poly
+                               {:git/url "https://github.com/polyfy/polylith"
+                                :git/sha "ccc261e60f6a875ff30858bf84cf67be105eac6f"
+                                :deps/root "projects/poly"}
+           
+                               polylith-kaocha/test-runner
+                               {:git/url "https://github.com/imrekoszo/polylith-kaocha"
+                                :git/tag "v0.8.2"
+                                :git/sha "d1fcd40"
+                                :deps/root "projects/test-runner"}}}}}
