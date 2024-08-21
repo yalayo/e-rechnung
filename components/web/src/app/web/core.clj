@@ -13,21 +13,22 @@
      :body "<a href='/download/invoice.pdf'>Download Invoice</a>"}))
 
 (def routes
-  #{["/" :get (fn [_] {:status 200 :headers {"Content-Type" "text/html"} :body (index-page)})]
-    ["/generate-invoice" :post generate-invoice-handler]
+  #{["/" :get (fn [_] {:status 200 :headers {"Content-Type" "text/html"} :body (index-page)}) :route-name ::index-page]
+    ["/generate-invoice" :post generate-invoice-handler :route-name ::generate-invoice]
     ["/download/:file" :get (fn [{:keys [path-params]}]
                               (let [file-path (str "output/" (:file path-params))]
                                 (if (.exists (java.io.File. file-path))
                                   {:status 200
                                    :headers {"Content-Type" "application/pdf"}
                                    :body (java.nio.file.Files/readAllBytes (java.nio.file.Paths/get file-path))}
-                                  {:status 404 :body "File not found"})))]})
+                                  {:status 404 :body "File not found"})))
+		 :route-name ::download-file]})
 
 (def service
   {:env :prod
    ::http/routes routes
    ::http/resource-path "/public"
-   ::http/type :jetty
+   ::http/type :immutant
    ::http/port 8080})
 
 (defn start []
