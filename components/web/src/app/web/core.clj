@@ -13,7 +13,9 @@
      :body "<a href='/download/invoice.pdf'>Download Invoice</a>"}))
 
 (def routes
-  #{["/" :get (fn [_] {:status 200 :headers {"Content-Type" "text/html"} :body (index-page)}) :route-name ::index-page]
+  #{["/" :get (fn [_] {:status 200 
+                       :headers {"Content-Type" "text/html" "Content-Security-Policy" "img-src 'self'"} 
+                       :body (index-page)}) :route-name ::index-page]
     ["/generate-invoice" :post generate-invoice-handler :route-name ::generate-invoice]
     ["/download/:file" :get (fn [{:keys [path-params]}]
                               (let [file-path (str "output/" (:file path-params))]
