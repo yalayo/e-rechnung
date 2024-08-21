@@ -26,3 +26,6 @@
 				(o/insert ::invoice-header ::seller-address "Munsterstr 1")
 				;; Insert items and totals similarly
 				(o/fire-rules))))
+
+(defn invoice-content [invoice-data]
+	(o/query-all (create-session invoice-data) ::invoice-header))
