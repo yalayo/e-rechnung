@@ -5,6 +5,7 @@
 				org.clojure/data.xml {:mvn/version "0.0.8"}
 				pdfboxing/pdfboxing {:mvn/version "0.1.14"}
 				clj-pdf/clj-pdf {:mvn/version "2.6.8"}
+				net.sekao/odoyle-rules {:mvn/version "1.1.0"}
 
 				;; Bricks
 				poly/invoicerules {:local/root "../../components/invoicerules"}
