@@ -3,35 +3,26 @@
 
 (def rules
 	(o/ruleset
-		{::invoice-header
+		{::add-header-element
 		 [:what
-			[::invoice-number]
-			[::invoice-date]
-			[::buyer-name]
-			[::buyer-address]
-			[::seller-name]
-			[::seller-address]]
+			[::invoice-header ::invoice-number value]
+			[::invoice-header ::invoice-date value]
+			[::invoice-header ::buyer-name value]
+			[::invoice-header ::buyer-address value]
+			[::invoice-header ::seller-name value]
+			[::invoice-header ::seller-address value]]
 
-		 ::invoice-item
-		 [:what
-			[::item-description]
-			[::item-quantity]
-			[::item-unit-price]
-			[::item-total-price]]
-
-		 ::invoice-total
-		 [:what
-			[::total-amount]]}))
+		 }))
 
 (defn create-session [invoice-data]
 	(let [session (o/->session)]
 		(-> session
 				(o/add-rule rules)
-				(o/insert ::invoice-number (invoice-data :invoice-number))
-				(o/insert ::invoice-date (invoice-data :invoice-date))
-				(o/insert ::buyer-name (invoice-data :buyer-name))
-				(o/insert ::buyer-address (invoice-data :buyer-address))
-				(o/insert ::seller-name (invoice-data :seller-name))
-				(o/insert ::seller-address (invoice-data :seller-address))
+				(o/insert ::invoice-header ::invoice-number "InvoiceNumber")
+				(o/insert ::invoice-header ::invoice-date "01.01.2025")
+				(o/insert ::invoice-header ::buyer-name "Buyer")
+				(o/insert ::invoice-header ::buyer-address "Munsterstr 23")
+				(o/insert ::invoice-header ::seller-name "Seller")
+				(o/insert ::invoice-header ::seller-address "Munsterstr 1")
 				;; Insert items and totals similarly
 				(o/fire-rules))))
