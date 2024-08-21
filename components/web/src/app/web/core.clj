@@ -1,7 +1,7 @@
 (ns app.web.core
   (:require [io.pedestal.http :as http]
-            [html.core :refer [index-page]]
-            [invoice-pdf.core :refer [create-invoice]]))
+            [app.html.interface :refer [index-page]]
+            [app.invoicepdf.interface :refer [create-invoice]]))
 
 (defn generate-invoice-handler [request]
   (let [invoice-data (-> request :form-params)
