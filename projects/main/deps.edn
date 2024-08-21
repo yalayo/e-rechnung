@@ -1,0 +1,16 @@
+{:deps {io.pedestal/pedestal.service {:mvn/version "0.5.9"}
+				io.pedestal/pedestal.route {:mvn/version "0.5.9"}
+				io.pedestal/pedestal.immutant {:mvn/version "0.5.9"}
+				hiccup/hiccup {:mvn/version "2.0.0-RC3"}
+				org.clojure/data.xml {:mvn/version "0.0.8"}
+				pdfboxing/pdfboxing {:mvn/version "0.1.14"}
+				clj-pdf/clj-pdf {:mvn/version "2.6.8"}
+
+				;; Bricks
+				poly/invoicerules {:local/root "../../components/invoicerules"}
+				poly/invoicepdf {:local/root "../../components/invoicepdf"}
+				poly/html {:local/root "../../components/html"}
+				poly/web {:local/root "../../components/web"}
+				poly/server {:local/root "../../bases/server"}}
+ :aliases {:test {:extra-paths ["test"]
+	 :extra-deps {}}}}
