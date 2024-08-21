@@ -3,7 +3,8 @@
                                "components/invoicerules/src"
                                "components/invoicepdf/src"
                                "components/html/src"
-                               "components/web/src"]
+                               "components/web/src"
+                               "components/web/resources"]
                  :extra-deps {io.pedestal/pedestal.service {:mvn/version "0.5.9"}
                               io.pedestal/pedestal.route {:mvn/version "0.5.9"}
                               io.pedestal/pedestal.immutant {:mvn/version "0.5.9"}
