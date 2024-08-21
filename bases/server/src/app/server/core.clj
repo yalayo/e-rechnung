@@ -1,5 +1,5 @@
 (ns app.server.core
-	(:require [web.core :as web]))
+	(:require [app.web.interface :as web]))
 
 (defn -main []
 	(web/start))
