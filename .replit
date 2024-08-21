@@ -1,0 +1,6 @@
+hidden = [".clj-kondo", ".lsp", ".config"]
+
+modules = ["clojure-1.11"]
+
+[nix]
+channel = "stable-24_05"
