@@ -3,3 +3,6 @@
 
 (defn start []
   (core/start))
+
+(defn stop [server]
+  (core/stop server))
