@@ -19,8 +19,8 @@
   (swap! *session
 	(fn [session]
 		(-> session
-				(o/insert ::invoice-header ::invoice-number "InvoiceNumber")
-				(o/insert ::invoice-header ::invoice-date "01.01.2025")
+				(o/insert ::invoice-header ::invoice-number (:invoice-number invoice-data))
+				(o/insert ::invoice-header ::invoice-date (:invoice-date invoice-data))
 				(o/insert ::invoice-header ::buyer-name "Buyer")
 				(o/insert ::invoice-header ::buyer-address "Munsterstr 23")
 				(o/insert ::invoice-header ::seller-name "Seller")
