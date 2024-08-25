@@ -196,18 +196,17 @@
     ["Currency:" "EUR"]
     ["Billing Period:" "01.01.2010 to 31.12.2010"]]
   
-     ;; Seller and Buyer Information Section
-  [:heading {:style {:size 15}} "Seller"]
-  [:paragraph "Grundbesitz GmbH & Co."]
-  [:paragraph "Musterstraße 42, DE 75645 Frankfurt"]
-  [:paragraph "Tax Number: 201/113/40209"]
-  [:paragraph "VAT ID: DE136695976"]
-  
-  [:heading {:style {:size 15}} "Buyer"]
-  [:paragraph "Beispielmieter GmbH"]
-  [:paragraph "Verwaltung Straße 40, DE 12345 Musterstadt"]
-  
-  [:pagebreak]
+  [:table {:widths [100 100] :border false}
+   [[:cell 
+     [:heading {:style {:size 15}} "Seller"]
+     [:paragraph "Grundbesitz GmbH & Co."]
+     [:paragraph "Musterstraße 42, DE 75645 Frankfurt"]
+     [:paragraph "Tax Number: 201/113/40209"]
+     [:paragraph "VAT ID: DE136695976"]] 
+    [:cell 
+     [:heading {:style {:size 15}} "Buyer"]
+     [:paragraph "Beispielmieter GmbH"]
+     [:paragraph "Verwaltung Straße 40, DE 12345 Musterstadt"]]]] 
 
   ;; Items and Charges Section
    [:heading {:style {:size 15}} "Invoice Items"]
