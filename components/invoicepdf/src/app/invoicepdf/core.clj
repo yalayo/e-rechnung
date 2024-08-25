@@ -10,21 +10,62 @@
 	"<xml></xml>")  ; Placeholder
 
 (defn generate-pdf [pdf-path invoice-content xml-content]
-  (let [content [:table {:cell-border false
-                         :header [{:backdrop-color [100 100 100]} "Row 1" "Row 2" "Row 3"]
-                         :spacing 20}
-                 ["foo"
-                  [:cell
-                   [:phrase {:style :italic :size 18 :family :helvetica :color [200 55 221]}
-                    "Hello Clojure!"]]
-                  "baz"]
-                 ["foo1" [:cell {:color [100 10 200]} "bar1"] "baz1"]
-                 ["foo2" "bar2" "baz2"]]] 
-   (pdf/pdf
-     [{:title "Invoice"}
-      [:paragraph "Invoice"]
-      ]
-     pdf-path))
+  (pdf/pdf
+   [{:title "Invoice"
+     :subject "Betriebskostenabrechnung"
+     :author "Grundbesitz GmbH & Co."
+     :font {:family "Helvetica" :size 12}}
+  
+       ;; Title Section
+    [:heading {:size 16} "INVOICE"]
+  
+    ;; Invoice Metadata Section
+    [:table {:widths [100 200] :border false}
+     ["Invoice Number:" "471102"]
+     ["Invoice Date:" "05.03.2018"]
+     ["Currency:" "EUR"]
+     ["Billing Period:" "01.01.2010 to 31.12.2010"]]
+  
+    [:table {:widths [100 100] :border false}
+     [[:cell
+       [:heading {:style {:size 15}} "Seller"]
+       [:paragraph "Grundbesitz GmbH & Co."]
+       [:paragraph "Musterstraße 42, DE 75645 Frankfurt"]
+       [:paragraph "Tax Number: 201/113/40209"]
+       [:paragraph "VAT ID: DE136695976"]]
+      [:cell
+       [:heading {:style {:size 15}} "Buyer"]
+       [:paragraph "Beispielmieter GmbH"]
+       [:paragraph "Verwaltung Straße 40, DE 12345 Musterstadt"]]]]
+  
+    ;; Items and Charges Section
+    [:heading {:style {:size 15}} "Invoice Items"]
+    [:table {:widths [30 180 70 60 60 70] :spacing 5}
+     [[:cell {:colspan 2} "Description"] "Unit Price (EUR)" "Quantity" "Tax Rate" "Total (EUR)"]
+     [[:cell {:align :center} "1"] "Abrechnungskreis 1" [:cell {:align :center} "15,387.08"] [:cell {:align :center} "1"] [:cell {:align :center} "19%"] [:cell {:align :center} "15,387.08"]]]
+  
+    ;; VAT Breakdown Section
+    [:heading {:style {:size 15}} "VAT Breakdown"]
+    [:table {:widths [100 100 100 50 50] :spacing 5}
+     ["Category" "Value (EUR)" "Base Amount (EUR)" "Tax Rate (%)" "Tax Amount (EUR)"]
+     ["VAT S" [:cell {:align :center} "15,387.08"] [:cell {:align :center} "15,387.08"] [:cell {:align :center} "19"] [:cell {:align :center} "2,923.55"]]]
+  
+    [:pagebreak]
+  
+     ;; Summary Section
+    [:heading {:style {:size 15}} "Summary"]
+    [:table {:widths [200 100] :border false}
+     ["Subtotal" "15,387.08 EUR"]
+     ["Tax Amount" "2,923.55 EUR"]
+     ["Total" "18,310.63 EUR"]
+     ["Payments Received" "-17,808.00 EUR"]
+     ["Balance Due" "502.63 EUR"]]
+  
+     ;; Payment Terms Section
+    [:heading {:style {:size 15}} "Payment Terms"]
+    [:paragraph "Due Date: 04.04.2018"]
+    [:paragraph "Please ensure payment by the due date to avoid any late fees."]]
+   pdf-path)
 	;; Attach the XML file to the PDF
 	#_(spit "invoice.xml" xml-content)
 	#_(pdfbox/merge pdf-path "invoice.xml"))
