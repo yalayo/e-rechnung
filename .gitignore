@@ -30,3 +30,6 @@ pom.xml.asc
 **/.lsp/*
 **/.cpcache/*
 **/.config/*
+
+# Other
+docker/*
