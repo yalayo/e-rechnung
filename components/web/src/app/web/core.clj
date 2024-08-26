@@ -1,9 +1,11 @@
 (ns app.web.core
   (:require [io.pedestal.http :as http]
+            [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http.params :as params]
             [app.html.interface :refer [index-page]]
-            [app.invoicepdf.interface :refer [create-invoice]]))
+            [app.invoicepdf.interface :refer [create-invoice]]
+            [app.user.interface :refer [get-routes]]))
 
 (def generate-invoice-handler
   {:name ::post
@@ -36,7 +38,7 @@
 
 (def service
   {:env :prod
-   ::http/routes routes
+   ::http/routes (route/expand-routes (into #{} (concat routes (get-routes))))
    ::http/resource-path "/public"
    ::http/type :immutant
    ::http/port 8080})
