@@ -1,5 +1,7 @@
 (ns app.user.core
-  (:require [hiccup2.core :as h]))
+  (:require [hiccup2.core :as h]
+            [io.pedestal.http.body-params :as body-params]
+            [io.pedestal.http.params :as params]))
 
 (defn home-page
   []
@@ -159,8 +161,15 @@
 (defn sign-up-handler [request]
   (respond request sign-up-page))
 
-(defn home-page-handler [request]
-  (respond request home-page))
+(def post-sign-up-handler
+  {:name ::post
+   :enter (fn [context]
+            (let [params (-> context :request :params)
+                  {:keys [email password password-confirmation]} params
+                  response {:headers {"Content-Type" "text/html"}}]
+              (if (= password password-confirmation)
+                ()
+                (assoc context :response (-> (sign-up-form {:error "Passwords are not matching"}) (ok))))))})
 
 (def routes
   #{["/sign-in"
@@ -168,4 +177,6 @@
      :route-name ::sign-in]
     ["/sign-up"
      :get sign-up-handler
-     :route-name ::sign-up]})
+     :route-name ::sign-up]
+    ["/sign-up" :post [(body-params/body-params) params/keyword-params post-sign-up-handler]
+     :route-name ::post-sign-up]})
