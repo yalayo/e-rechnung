@@ -23,6 +23,15 @@
 
 ;; (create-account "prueba@mail.com" "password")
 
+(defn get-account [email]
+  (jdbc/execute-one!
+   ds
+   (-> {:select :*
+        :from [:accounts]
+        :where [:= :email email]}
+       (sql/format))
+   {:builder-fn rs/as-unqualified-kebab-maps}))
+
 (defn migrate-db []
   (log/info "Running database init")
   (.migrate

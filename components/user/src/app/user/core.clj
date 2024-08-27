@@ -2,6 +2,7 @@
   (:require [hiccup2.core :as h]
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http.params :as params]
+            [buddy.hashers :as bh]
             [app.user.database :as db]))
 
 (defn home-page
@@ -25,7 +26,7 @@
       [:img.h-40.w-full.object-cover.sm:h-56.md:h-full {:alt "Student" :src "https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"}]]]]])
 
 (defn sign-in-form
-  [{:keys [error]}]
+  [{:keys [error email]}]
   [:form.mt-8.grid.grid-cols-6.gap-6
    {:hx-post "/sign-in"
     :hx-target "this"
@@ -36,7 +37,7 @@
    [:div.col-span-6
     [:label.block.text-sm.font-medium.text-gray-700.dark:text-gray-200 {:for "Email"} "Email"]
     [:input#Email.block.w-full.rounded-md.border-0.py-1.5.text-gray-900.shadow-sm.ring-1.ring-inset.ring-gray-300.placeholder:text-gray-400.focus:ring-2.focus:ring-inset.focus:ring-indigo-600.sm:text-sm.sm:leading-6
-     {:type "email" :name "email"
+     {:type "email" :name "email" :value email
       :autocomplete "off"}]]
    [:div.col-span-6
     [:label.block.text-sm.font-medium.text-gray-700.dark:text-gray-200 {:for "Password"} "Password"]
@@ -175,6 +176,18 @@
                                            :session (select-keys (into {} account) [:email :created-at])}))
                 (assoc context :response (-> (sign-up-form {:error "Passwords are not matching" :email email}) (ok))))))})
 
+(def post-sign-in-handler
+  {:name ::post
+   :enter (fn [context]
+            (let [params (-> context :request :params)
+                  {:keys [email password]} params
+                  account (db/get-account email)]
+              (if (and account (:valid (bh/verify password (:password account))))
+                (assoc context :response {:status 200
+                                          :headers {"HX-Redirect" "/dashboard"}
+                                          :session (select-keys (into {} account) [:email :created-at])})
+                (assoc context :response (-> (sign-in-form {:error "Passwords are not matching" :email email}) (ok))))))})
+
 (def routes
   #{["/sign-in"
      :get sign-in-handler
@@ -183,4 +196,6 @@
      :get sign-up-handler
      :route-name ::sign-up]
     ["/sign-up" :post [(body-params/body-params) params/keyword-params post-sign-up-handler]
-     :route-name ::post-sign-up]})
+     :route-name ::post-sign-up]
+    ["/sign-in" :post [(body-params/body-params) params/keyword-params post-sign-in-handler]
+     :route-name ::post-sign-in]})
