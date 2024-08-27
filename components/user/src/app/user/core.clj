@@ -76,7 +76,7 @@
 
 
 (defn sign-up-form
-  [{:keys [error]}]
+  [{:keys [error email]}]
   [:form.mt-8.grid.grid-cols-6.gap-6
    {:hx-post "/sign-up"
     :hx-target "this"
@@ -89,6 +89,7 @@
     [:input#Email.block.w-full.rounded-md.border-0.py-1.5.text-gray-900.shadow-sm.ring-1.ring-inset.ring-gray-300.placeholder:text-gray-400.focus:ring-2.focus:ring-inset.focus:ring-indigo-600.sm:text-sm.sm:leading-6
      {:type "email"
       :name "email"
+      :value email
       :autocomplete "off"}]]
    [:div.col-span-6
     [:label.block.text-sm.font-medium.text-gray-700.dark:text-gray-200 {:for "password"} "Password"]
@@ -172,7 +173,7 @@
                   (assoc context :response {:status 200
                                            :headers {"HX-Redirect" "/dashboard"}
                                            :session (select-keys (into {} account) [:email :created-at])}))
-                (assoc context :response (-> (sign-up-form {:error "Passwords are not matching"}) (ok))))))})
+                (assoc context :response (-> (sign-up-form {:error "Passwords are not matching" :email email}) (ok))))))})
 
 (def routes
   #{["/sign-in"
