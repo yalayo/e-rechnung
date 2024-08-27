@@ -2,6 +2,7 @@
   (:require [hiccup2.core :as h]
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http.params :as params]
+            [ring.util.response :as response]
             [buddy.hashers :as bh]
             [app.user.database :as db]))
 
@@ -138,6 +139,24 @@
 						nam dolorum aliquam, quibusdam aperiam voluptatum."]]
       (sign-up-form {})]]]])
 
+;; Move later to its own component
+(defn dashboard-page
+  [{:keys [email created-at]}]
+  [:div.container.mx-auto
+   [:div.flow-root.rounded-lg.border.border-gray-100.py-3.shadow-sm
+    [:dl.-my-3.divide-y.divide-gray-100.text-sm
+     [:div.grid.grid-cols-1.gap-1.p-3.even:bg-gray-50.sm:grid-cols-3.sm:gap-4
+      [:dt.font-medium.text-gray-900 "Email"]
+      [:dd.text-gray-700.sm:col-span-2 email]]
+     [:div.grid.grid-cols-1.gap-1.p-3.even:bg-gray-50.sm:grid-cols-3.sm:gap-4
+      [:dt.font-medium.text-gray-900 "Joined"]
+      [:dd.text-gray-700.sm:col-span-2 (str created-at)]]
+
+     [:button.inline-block.rounded.bg-gradient-to-r.from-pink-500.via-red-500.to-yellow-500.hover:text-white.focus:outline-none.focus:ring.active:text-opacity-75
+      {:class "p-[2px]"
+       :hx-post "/logout"}
+      [:span.block.rounded-sm.bg-white.px-8.py-3.text-sm.font-medium.hover:bg-transparent "Log out"]]]]])
+
 ;; Prepare the hicup to return it as html
 (defn template [html-body]
   [:html
@@ -198,6 +217,12 @@
                                           :session (select-keys (into {} account) [:email :created-at])})
                 (assoc context :response (-> (sign-in-form {:error "Passwords are not matching" :email email}) (ok))))))})
 
+(defn dashboard-handler [context]
+  (println "TEST: " context)
+  (if-let [session (-> context :request :params :session)]
+    (respond (dashboard-page {:email (:email session) :created-at (:created-at session)}))
+    (response/redirect "/sign-in")))
+
 (def routes
   #{["/sign-in"
      :get sign-in-handler
@@ -208,4 +233,7 @@
     ["/sign-up" :post [(body-params/body-params) params/keyword-params post-sign-up-handler]
      :route-name ::post-sign-up]
     ["/sign-in" :post [(body-params/body-params) params/keyword-params post-sign-in-handler]
-     :route-name ::post-sign-in]})
+     :route-name ::post-sign-in]
+    ["/dashboard"
+     :get [(body-params/body-params) dashboard-handler]
+     :route-name ::dashboard]})
