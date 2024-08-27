@@ -1,7 +1,8 @@
 (ns app.user.core
   (:require [hiccup2.core :as h]
             [io.pedestal.http.body-params :as body-params]
-            [io.pedestal.http.params :as params]))
+            [io.pedestal.http.params :as params]
+            [app.user.database :as db]))
 
 (defn home-page
   []
@@ -165,10 +166,12 @@
   {:name ::post
    :enter (fn [context]
             (let [params (-> context :request :params)
-                  {:keys [email password password-confirmation]} params
-                  response {:headers {"Content-Type" "text/html"}}]
+                  {:keys [email password password-confirmation]} params]
               (if (= password password-confirmation)
-                ()
+                (let [account (db/create-account email password)]
+                  (assoc context :response {:status 200
+                                           :headers {"HX-Redirect" "/dashboard"}
+                                           :session (select-keys (into {} account) [:email :created-at])}))
                 (assoc context :response (-> (sign-up-form {:error "Passwords are not matching"}) (ok))))))})
 
 (def routes
