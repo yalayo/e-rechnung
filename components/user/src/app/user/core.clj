@@ -154,15 +154,25 @@
              (h/html)
              (str))})
 
-(defn respond [request content]
+(defn respond [content]
   (ok (template (str (h/html (content))))))
 
 ;; Handlers
-(defn sign-in-handler [request]
-  (respond request sign-in-page))
+(defn sign-in-handler [context]
+  (let [params (-> context :request :params)]
+    (if-let [session (:session params)]
+      (assoc context :response {:status 200
+                                :headers {"HX-Redirect" "/dashboard"}
+                                :session session})
+      (respond sign-in-page))))
 
-(defn sign-up-handler [request]
-  (respond request sign-up-page))
+(defn sign-up-handler [context]
+  (let [params (-> context :request :params)]
+    (if-let [session (:session params)]
+      (assoc context :response {:status 200
+                                :headers {"HX-Redirect" "/dashboard"}
+                                :session session})
+      (respond sign-up-page))))
 
 (def post-sign-up-handler
   {:name ::post
