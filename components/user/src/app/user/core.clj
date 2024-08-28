@@ -176,22 +176,19 @@
 (defn respond [content]
   (ok (template (str (h/html (content))))))
 
+(defn respond-with-params [content value]
+  (ok (template (str (h/html (content value))))))
+
 ;; Handlers
 (defn sign-in-handler [context]
-  (let [params (-> context :request :params)]
-    (if-let [session (:session params)]
-      (assoc context :response {:status 200
-                                :headers {"HX-Redirect" "/dashboard"}
-                                :session session})
-      (respond sign-in-page))))
+  (if (empty? (-> context :session)) 
+   (respond sign-in-page)
+   (response/redirect "/dashboard")))
 
 (defn sign-up-handler [context]
-  (let [params (-> context :request :params)]
-    (if-let [session (:session params)]
-      (assoc context :response {:status 200
-                                :headers {"HX-Redirect" "/dashboard"}
-                                :session session})
-      (respond sign-up-page))))
+  (if (empty? (-> context :session))
+    (respond sign-up-page)
+    (response/redirect "/dashboard")))
 
 (def post-sign-up-handler
   {:name ::post
@@ -213,15 +210,17 @@
                   account (db/get-account email)]
               (if (and account (:valid (bh/verify password (:password account))))
                 (assoc context :response {:status 200
-                                          :headers {"HX-Redirect" "/dashboard"}
+                                          :headers {"HX-Location" "/dashboard"}
                                           :session (select-keys (into {} account) [:email :created-at])})
                 (assoc context :response (-> (sign-in-form {:error "Passwords are not matching" :email email}) (ok))))))})
 
 (defn dashboard-handler [context]
-  (println "TEST: " context)
-  (if-let [session (-> context :request :params :session)]
-    (respond (dashboard-page {:email (:email session) :created-at (:created-at session)}))
-    (response/redirect "/sign-in")))
+  (println "TEST: " (-> context :session))
+  (let [session (-> context :session)]
+    (println (-> (dashboard-page {:email (:email session) :created-at (:created-at session)}) (ok)))
+    (if (empty? session)
+      (response/redirect "/sign-in")
+      (respond-with-params dashboard-page {:email (:email session) :created-at (:created-at session)}))))
 
 (def routes
   #{["/sign-in"
