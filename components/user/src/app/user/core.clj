@@ -4,8 +4,7 @@
             [io.pedestal.http.params :as params]
             [ring.util.response :as response]
             [buddy.hashers :as bh]
-            [app.user.database :as db]
-            [app.user.dashboard :as dashboard]))
+            [app.user.database :as db]))
 
 (defn home-page
   []
@@ -177,9 +176,6 @@
 (defn respond [content]
   (ok (template (str (h/html (content))))))
 
-(defn respond-with-params [content value]
-  (ok (template (str (h/html (content value))))))
-
 ;; Handlers
 (defn sign-in-handler [context]
   (if (empty? (-> context :session)) 
@@ -215,13 +211,6 @@
                                           :session (select-keys (into {} account) [:email :created-at])})
                 (assoc context :response (-> (sign-in-form {:error "Passwords are not matching" :email email}) (ok))))))})
 
-(defn dashboard-handler [context]
-  (println "TEST: " (-> context :session))
-  (let [session (-> context :session)] 
-    (if (empty? session)
-      (response/redirect "/sign-in")
-      (respond-with-params dashboard/content {:email (:email session) :created-at (:created-at session)}))))
-
 (def routes
   #{["/sign-in"
      :get sign-in-handler
@@ -232,7 +221,4 @@
     ["/sign-up" :post [(body-params/body-params) params/keyword-params post-sign-up-handler]
      :route-name ::post-sign-up]
     ["/sign-in" :post [(body-params/body-params) params/keyword-params post-sign-in-handler]
-     :route-name ::post-sign-in]
-    ["/dashboard"
-     :get [(body-params/body-params) dashboard-handler]
-     :route-name ::dashboard]})
+     :route-name ::post-sign-in]})
