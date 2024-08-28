@@ -33,7 +33,6 @@
    {:builder-fn rs/as-unqualified-kebab-maps}))
 
 (defn migrate-db []
-  (log/info "Running database init")
   (.migrate
    (.. (Flyway/configure)
        #_(dataSource datasource)
