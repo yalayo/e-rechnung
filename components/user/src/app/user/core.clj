@@ -4,7 +4,8 @@
             [io.pedestal.http.params :as params]
             [ring.util.response :as response]
             [buddy.hashers :as bh]
-            [app.user.database :as db]))
+            [app.user.database :as db]
+            [app.user.dashboard :as dashboard]))
 
 (defn home-page
   []
@@ -216,11 +217,10 @@
 
 (defn dashboard-handler [context]
   (println "TEST: " (-> context :session))
-  (let [session (-> context :session)]
-    (println (-> (dashboard-page {:email (:email session) :created-at (:created-at session)}) (ok)))
+  (let [session (-> context :session)] 
     (if (empty? session)
       (response/redirect "/sign-in")
-      (respond-with-params dashboard-page {:email (:email session) :created-at (:created-at session)}))))
+      (respond-with-params dashboard/content {:email (:email session) :created-at (:created-at session)}))))
 
 (def routes
   #{["/sign-in"
