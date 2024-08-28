@@ -5,7 +5,7 @@
             [io.pedestal.http.params :as params]
             [io.pedestal.http.ring-middlewares :as middlewares]
             [jdbc-ring-session.core :as jdbc-ring-session]
-            [app.html.interface :refer [index-page]]
+            [app.html.interface :as html]
             [app.invoicepdf.interface :refer [create-invoice]]
             [app.user.interface :refer [get-routes get-datasource]]))
 
@@ -20,10 +20,7 @@
                                         :body "<a href='/download/invoice.pdf'>Download Invoice</a>"})))})
 
 (def routes
-  #{["/" :get (fn [_] {:status 200 
-                       :headers {"Content-Type" "text/html" "Content-Security-Policy" "img-src 'self'"} 
-                       :body (index-page)}) :route-name ::index-page]
-    ["/generate-invoice" :post [(body-params/body-params)
+  #{["/generate-invoice" :post [(body-params/body-params)
                                 params/keyword-params
                                 generate-invoice-handler] 
      :route-name ::generate-invoice]
@@ -43,7 +40,7 @@
 
 (def service
   (-> {:env :prod
-       ::http/routes (route/expand-routes (into #{} (concat routes (get-routes))))
+       ::http/routes (route/expand-routes (into #{} (concat routes (get-routes) (html/get-routes))))
        ::http/resource-path "/public"
        ::http/type :immutant
        ::http/port 8080}

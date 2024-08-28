@@ -1,5 +1,4 @@
-(ns app.html.interface
-	(:require [app.html.core :as core]))
+(ns app.html.interface)
 
-(defn index-page []
-	(core/index-page))
+(defn get-routes []
+  core/routes)
