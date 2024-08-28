@@ -3,9 +3,11 @@
             [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http.params :as params]
+            [io.pedestal.http.ring-middlewares :as middlewares]
+            [jdbc-ring-session.core :as jdbc-ring-session]
             [app.html.interface :refer [index-page]]
             [app.invoicepdf.interface :refer [create-invoice]]
-            [app.user.interface :refer [get-routes]]))
+            [app.user.interface :refer [get-routes get-datasource]]))
 
 (def generate-invoice-handler
   {:name ::post
@@ -36,15 +38,21 @@
                                   {:status 404 :body "File not found"})))
 		 :route-name ::download-file]})
 
+(def session-interceptor
+  (middlewares/session {:store (jdbc-ring-session/jdbc-store (get-datasource) {:table :session_store})}))
+
 (def service
-  {:env :prod
-   ::http/routes (route/expand-routes (into #{} (concat routes (get-routes))))
-   ::http/resource-path "/public"
-   ::http/type :immutant
-   ::http/port 8080})
+  (-> {:env :prod
+       ::http/routes (route/expand-routes (into #{} (concat routes (get-routes))))
+       ::http/resource-path "/public"
+       ::http/type :immutant
+       ::http/port 8080}
+      (http/default-interceptors)
+      (update ::http/interceptors concat [session-interceptor])
+      http/create-server))
 
 (defn start []
-  (http/start (http/create-server service)))
+  (http/start service))
 
 (defn stop [server]
   (http/stop server))
