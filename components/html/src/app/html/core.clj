@@ -3,7 +3,7 @@
             [io.pedestal.http.body-params :as body-params]
             [ring.util.response :as response]
             [app.html.index :as index]
-            [app.user.dashboard :as dashboard]))
+            [app.html.dashboard :as dashboard]))
 
 ;; Prepare the hicup to return it as html
 (defn template [html-body]

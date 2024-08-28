@@ -1,6 +1,5 @@
 (ns app.html.dashboard
-  (:require [app.html.invoice-data :refer [html]]
-            [app.html.interface :as html]))
+  (:require [app.html.invoice-data :refer [html]]))
 
 (defn content [{:keys [email created-at]}]
   [:div
