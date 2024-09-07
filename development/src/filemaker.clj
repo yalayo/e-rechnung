@@ -133,6 +133,27 @@
   (get-table (connect-to-filemaker) "CCSRechnungen")
   )
 
+;; Query an article
+(defn get-article [con article-number]
+  (let [query (str "SELECT * FROM CCSArtikeldatei WHERE ArtNr = ?")]
+    (try
+      (with-open [stmt (.prepareStatement con query)]
+        (.setString stmt 1 article-number)
+        (with-open [rs (.executeQuery stmt)]
+          (let [result (atom {})]
+            (while (.next rs)
+              (swap! result conj {:quantity 1})
+              (swap! result conj {:article-id article-number})
+              (swap! result conj {:description (.getString rs "ArtBezeichnung")})
+              (swap! result conj {:unit-price (Float/parseFloat (.getString rs "Apreis"))}))
+            @result)))
+      (catch Exception e
+        (println e)))))
+
+(comment
+  (get-article (connect-to-filemaker) "H803F-XL")
+  )
+
 ;; Generate pdf with filemaker data
 (defn generate-pdf []
   (pdf/pdf
