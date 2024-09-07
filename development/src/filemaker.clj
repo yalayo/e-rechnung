@@ -54,6 +54,85 @@
 
 ;; (Firmenname Telefon Telefon priv Fax Telefon Büro Straße Ort Land PLZ Eingabedatum Werbegeschenk Priorität Hinweise Kommentare Zweite Straße Zweiter Ort Zweites Land Zweite PLZ Datum Kundenname Typ Kundennr Seriennr email Anrede GlobalSuche Rabattstaffel UST_Proz Vlies verschickt am Zahlungsart Kto BLZ Zahlungsartcheck UID_Nr Maschine Software Status MWSt_Prozent Checkfeld Einnahmekonto Kontoinhaber Geaendert AnfrageID Adresse f. Export LandGebiet UPS VCard Vliesmuster email kopie IBAN BIC Adr_Checkfeld Zweiter Kundenname Zweiter Firmenname CSV_Exportfeld_Wildix ID NamePrefix Extension TypWildix AdressWildix Vat DocumentType Documentld Mobile Tel_ohne_Leerzeichen Büro_ohne_Leerzeichen Karte MWST_Global kdnr_neu kdnr_alt Kundennr_zum_Überprüfen Datensatznr TelNr_mit_Null Kundennummernüberlauf OSS_LK OSS_Prozent Überprüfung Telefon_Plus Telefon_priv_Plus Telefon_Büro_Plus Fax_Plus Shortcut HomeMobile Type Address Kopf_CSV Debitorennr. GlobalDebitor Export Monkey kdnr_B kdnr_C kdnr_D)
 
+;; Get invoice data
+(defn query-invoice [con]
+  (let [query "SELECT * FROM CCSArtikeldatei"]
+    (try
+      (with-open [stmt (.createStatement con)
+                  rs (.executeQuery stmt query)]
+        ;; Get all the column names
+        (let [rsm (.getMetaData rs)
+              column-count (.getColumnCount rsm)
+              column-names (for [i (range 1 column-count)]
+                             (.getColumnName rsm i))]
+          ;; Iterate through the result set
+          (while (.next rs)
+            (let [output (apply str (interpose ", "
+                                (for [column-name column-names]
+                                  (.getString rs column-name))))]
+              (println (str output "\n"))))))
+      (catch Exception e
+        (println e)))))
+
+(comment
+  (query-invoice (connect-to-filemaker))
+  )
+
+;; Using prepared statement
+(defn get-column-value-prepared [con table-name column-name filter-value]
+  (let [query (str "SELECT " column-name " FROM " table-name " WHERE " column-name " = ?")]
+    (try
+      (with-open [stmt (.prepareStatement con query)]
+        (.setString stmt 1 filter-value)
+        (with-open [rs (.executeQuery stmt)]
+          (while (.next rs)
+            (println (.getString rs column-name)))))
+      (catch Exception e
+        (println e)))))
+
+(comment
+  (get-column-value-prepared (connect-to-filemaker) "CCSRechnungen" "Artikelnummer" "H803F-XL")
+  (get-column-value-prepared (connect-to-filemaker) "CCSArtikeldatei" "ArtNr" "H803F-XL")
+  )
+
+
+;; Without where
+(defn get-column [con table-name column-name]
+  (let [query (str "SELECT " column-name " FROM " table-name)]
+    (try
+      (with-open [stmt (.prepareStatement con query)]
+        (with-open [rs (.executeQuery stmt)]
+          (while (.next rs)
+            (println (.getString rs column-name)))))
+      (catch Exception e
+        (println e)))))
+
+(comment
+  (get-column (connect-to-filemaker) "CCSRechnungen" "Kundennummer")
+  (get-column (connect-to-filemaker) "CCSArtikeldatei" "ArtBezeichnung")
+  )
+
+;; Query a table
+(defn get-table [con table-name]
+  (let [query (str "SELECT * FROM " table-name)]
+    (try
+      (with-open [stmt (.prepareStatement con query)]
+        (with-open [rs (.executeQuery stmt)
+                    rsm (.getMetaData rs)
+                    column-count (.getColumnCount rsm)
+                    column-names (for [i (range 1 column-count)]
+                                   (.getColumnName rsm i))]
+          (while (.next rs)
+            (let [output (for [column-name column-names]
+                           (str column-name ":"(.getString rs column-name)))]
+              (println output)))))
+      (catch Exception e
+        (println e)))))
+
+(comment
+  (get-table (connect-to-filemaker) "CCSRechnungen")
+  )
+
 ;; Generate pdf with filemaker data
 (defn generate-pdf []
   (pdf/pdf
