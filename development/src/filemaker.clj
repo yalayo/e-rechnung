@@ -155,7 +155,7 @@
   )
 
 ;; Generate pdf with filemaker data
-(defn generate-pdf []
+(defn generate-pdf [items]
   (pdf/pdf
    [{:title "Invoice"
      :subject "Betriebskostenabrechnung"
@@ -188,7 +188,7 @@
     [:heading {:style {:size 15}} "Invoice Items"]
     [:table {:widths [30 70 180 60 60] :spacing 5}
      ["Stk" "Art. Nummer" "Beschreibung" [:cell {:align :center} "Stückpreis"] [:cell {:align :center} "Betrag"]]
-     [[:cell {:align :center} "1"] "H803F-XL" "Abrechnungskreis 1" [:cell {:align :center} "15,387.08"] [:cell {:align :center} "15,387.08"]]]
+     (first (map #(conj [] [:cell {:align :center} (:quantity %)] (:article-id %) (:description %) [:cell {:align :center} (:unit-price %)] [:cell {:align :center} (Float/toString (* (:unit-price %) (:quantity %)))]) items))]
     
     [:pagebreak]
   
@@ -205,8 +205,10 @@
     [:heading {:style {:size 15}} "Payment Terms"]
     [:paragraph "Due Date: 04.04.2018"]
     [:paragraph "Please ensure payment by the due date to avoid any late fees."]]
-   "output/test2.pdf"))
+   "output/test4.pdf"))
 
 (comment
-  (generate-pdf)
+  (generate-pdf (conj [] (get-article (connect-to-filemaker) "H803F-XL")))
+
+  (first (first (map #(conj [] [:cell {:align :center} (:quantity %)] (:article-id %) (:description %) [:cell {:align :center} (:unit-price %)] [:cell {:align :center} (* (:unit-price %) (:quantity %))]) (conj [] (get-article (connect-to-filemaker) "H803F-XL")))))
   )
