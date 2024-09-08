@@ -154,6 +154,48 @@
   (get-article (connect-to-filemaker) "H803F-XL")
   )
 
+;; Query all products
+(defn get-art [con article-number]
+  (let [query (str "SELECT * FROM CCSArtikeldatei")]
+    (try
+      (with-open [stmt (.prepareStatement con query)]
+        (.setString stmt 1 article-number)
+        (with-open [rs (.executeQuery stmt)]
+          (let [result (atom {})]
+            (while (.next rs)
+              (swap! result conj {:quantity 1})
+              (swap! result conj {:article-id article-number})
+              (swap! result conj {:description (.getString rs "ArtBezeichnung")})
+              (swap! result conj {:unit-price (Float/parseFloat (.getString rs "Apreis"))}))
+            @result)))
+      (catch Exception e
+        (println e)))))
+
+(defn get-articles [con columns]
+  (let [query (str "SELECT * FROM CCSArtikeldatei")
+        articles (atom [])]
+    (try
+      (with-open [stmt (.prepareStatement con query)]
+        (with-open [rs (.executeQuery stmt)]
+          (while (.next rs)
+            (let [result (atom {})
+                  _ (doseq [column-name columns]
+                      (when (= "ArtNr" column-name)
+                        (swap! result conj {:article-id (.getString rs "ArtNr")}))
+                      (when (= "ArtBezeichnung" column-name)
+                        (swap! result conj {:description (.getString rs "ArtBezeichnung")}))
+                      (when (= "Apreis" column-name)
+                        (swap! result conj {:unit-price (.getString rs "Apreis")})))]
+              (swap! articles conj @result)))))
+      @articles
+      (catch Exception e
+        (println e)))))
+
+(comment
+  (get-articles (connect-to-filemaker) ["ArtNr" "ArtBezeichnung" "Apreis"])
+  
+  )
+
 ;; Generate pdf with filemaker data
 (defn generate-pdf [items]
   (pdf/pdf
