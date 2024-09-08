@@ -33,19 +33,26 @@
       (catch Exception e
         (println e)))))
 
-;; Query a product
+;; Query all products
 (defn get-products []
-  (let [query (str "SELECT * FROM CCSArtikeldatei WHERE ArtNr = ?")]
+  (let [query (str "SELECT * FROM CCSArtikeldatei")
+        columns ["Qty" "ArtNr" "ArtBezeichnung" "Apreis"]
+        articles (atom [])]
     (try
       (with-open [stmt (.prepareStatement (connect-to-filemaker) query)]
-        #_(.setString stmt 1 article-number)
         (with-open [rs (.executeQuery stmt)]
-          (let [result (atom {})]
-            (while (.next rs)
-              (swap! result conj {:quantity 1})
-              #_(swap! result conj {:article-id article-number})
-              (swap! result conj {:description (.getString rs "ArtBezeichnung")})
-              (swap! result conj {:unit-price (Float/parseFloat (.getString rs "Apreis"))}))
-            @result)))
+          (while (.next rs)
+            (let [result (atom {})
+                  _ (doseq [column-name columns]
+                      (when (= "Qty" column-name)
+                        (swap! result conj {:quantity 1}))
+                      (when (= "ArtNr" column-name)
+                        (swap! result conj {:article-id (.getString rs "ArtNr")}))
+                      (when (= "ArtBezeichnung" column-name)
+                        (swap! result conj {:description (.getString rs "ArtBezeichnung")}))
+                      (when (= "Apreis" column-name)
+                        (swap! result conj {:unit-price (Float/parseFloat (.getString rs "Apreis"))})))]
+              (swap! articles conj @result)))))
+      @articles
       (catch Exception e
         (println e)))))
