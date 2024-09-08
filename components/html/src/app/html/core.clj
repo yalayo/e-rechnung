@@ -41,7 +41,14 @@
   (let [session (-> context :session)]
     (if (empty? session)
       (response/redirect "/sign-in")
-      (respond-with-params product/content {:email (:email session) :created-at (:created-at session)} "Dashboard"))))
+      (respond product/content "Products"))))
+
+(defn select-product-handler [context]
+  (let [session (-> context :session)]
+    (if (empty? session)
+      (response/redirect "/sign-in")
+      (println "Item with disabled button")
+      #_(respond-with-params product/content {:email (:email session) :created-at (:created-at session)} "Products"))))
 
 (def routes
   #{["/" :get index-page-handler :route-name ::index-page]
@@ -50,4 +57,8 @@
      :route-name ::dashboard]
     ["/products"
      :get [(body-params/body-params) products-handler]
-     :route-name ::products]})
+     :route-name ::products]
+    ["/products/:product-id"
+     :post [(body-params/body-params)
+           select-product-handler]
+     :route-name ::select-product]})

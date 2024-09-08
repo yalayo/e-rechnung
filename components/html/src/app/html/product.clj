@@ -52,8 +52,10 @@
      {:class "sm:ml-3"}
      [:button
       {:type "button",
-       :class
-       "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"}
+       :class "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+       :hx-post (str "/product/" (:article-id product)) 
+       :hx-target "this"
+       :hx-swap "outerHTML"}
       [:svg
        {:class "-ml-0.5 mr-1.5 h-5 w-5",
         :viewBox "0 0 20 20",
@@ -110,7 +112,7 @@
         :id "mobile-menu-item-1"}
        "View"]]]]])
 
-(defn content [{:keys [email created-at]}]
+(defn content []
   [:div
    {:class "min-h-full"}
    [:nav
