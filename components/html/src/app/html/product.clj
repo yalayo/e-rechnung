@@ -1,5 +1,114 @@
-(ns app.html.dashboard
-  (:require [app.html.invoice-data :refer [html]]))
+(ns app.html.product)
+
+(defn product-data [product]
+  [:div
+   {:class "lg:flex lg:items-center lg:justify-between"}
+   [:div
+    {:class "min-w-0 flex-1"}
+    [:h2
+     {:class
+      "text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight"}
+     (:description product)]
+    [:div
+     {:class
+      "mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6"} 
+     [:div
+      {:class "mt-2 flex items-center text-sm text-gray-500"}
+      [:svg
+       {:class "mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400",
+        :viewBox "0 0 20 20",
+        :fill "currentColor",
+        :aria-hidden "true"}
+       [:path
+        {:d
+         "M10.75 10.818v2.614A3.13 3.13 0 0011.888 13c.482-.315.612-.648.612-.875 0-.227-.13-.56-.612-.875a3.13 3.13 0 00-1.138-.432zM8.33 8.62c.053.055.115.11.184.164.208.16.46.284.736.363V6.603a2.45 2.45 0 00-.35.13c-.14.065-.27.143-.386.233-.377.292-.514.627-.514.909 0 .184.058.39.202.592.037.051.08.102.128.152z"}]
+       [:path
+        {:fill-rule "evenodd",
+         :d
+         "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-6a.75.75 0 01.75.75v.316a3.78 3.78 0 011.653.713c.426.33.744.74.925 1.2a.75.75 0 01-1.395.55 1.35 1.35 0 00-.447-.563 2.187 2.187 0 00-.736-.363V9.3c.698.093 1.383.32 1.959.696.787.514 1.29 1.27 1.29 2.13 0 .86-.504 1.616-1.29 2.13-.576.377-1.261.603-1.96.696v.299a.75.75 0 11-1.5 0v-.3c-.697-.092-1.382-.318-1.958-.695-.482-.315-.857-.717-1.078-1.188a.75.75 0 111.359-.636c.08.173.245.376.54.569.313.205.706.353 1.138.432v-2.748a3.782 3.782 0 01-1.653-.713C6.9 9.433 6.5 8.681 6.5 7.875c0-.805.4-1.558 1.097-2.096a3.78 3.78 0 011.653-.713V4.75A.75.75 0 0110 4z",
+         :clip-rule "evenodd"}]]
+      (:unit-price product)]]]
+   [:div
+    {:class "mt-5 flex lg:ml-4 lg:mt-0"}
+    [:span
+     {:class "ml-3 hidden sm:block"}
+     [:button
+      {:type "button",
+       :class
+       "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"}
+      [:svg
+       {:class "-ml-0.5 mr-1.5 h-5 w-5 text-gray-400",
+        :viewBox "0 0 20 20",
+        :fill "currentColor",
+        :aria-hidden "true"}
+       [:path
+        {:d
+         "M12.232 4.232a2.5 2.5 0 013.536 3.536l-1.225 1.224a.75.75 0 001.061 1.06l1.224-1.224a4 4 0 00-5.656-5.656l-3 3a4 4 0 00.225 5.865.75.75 0 00.977-1.138 2.5 2.5 0 01-.142-3.667l3-3z"}]
+       [:path
+        {:d
+         "M11.603 7.963a.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 00-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865z"}]]
+      "View"]]
+    [:span
+     {:class "sm:ml-3"}
+     [:button
+      {:type "button",
+       :class
+       "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"}
+      [:svg
+       {:class "-ml-0.5 mr-1.5 h-5 w-5",
+        :viewBox "0 0 20 20",
+        :fill "currentColor",
+        :aria-hidden "true"}
+       [:path
+        {:fill-rule "evenodd",
+         :d
+         "M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z",
+         :clip-rule "evenodd"}]]
+      "Auswählen"]]
+    [:div
+     {:class "relative ml-3 sm:hidden"}
+     [:button
+      {:type "button",
+       :class
+       "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400",
+       :id "mobile-menu-button",
+       :aria-expanded "false",
+       :aria-haspopup "true"}
+      "More"
+      [:svg
+       {:class "-mr-1 ml-1.5 h-5 w-5 text-gray-400",
+        :viewBox "0 0 20 20",
+        :fill "currentColor",
+        :aria-hidden "true"}
+       [:path
+        {:fill-rule "evenodd",
+         :d
+         "M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z",
+         :clip-rule "evenodd"}]]]
+     (comment
+       "Dropdown menu, show/hide based on menu state.\n\n        Entering: \"transition ease-out duration-200\"\n          From: \"transform opacity-0 scale-95\"\n          To: \"transform opacity-100 scale-100\"\n        Leaving: \"transition ease-in duration-75\"\n          From: \"transform opacity-100 scale-100\"\n          To: \"transform opacity-0 scale-95\"")
+     [:div
+      {:class
+       "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+       :role "menu",
+       :aria-orientation "vertical",
+       :aria-labelledby "mobile-menu-button",
+       :tabindex "-1"}
+      (comment "Active: \"bg-gray-100\", Not Active: \"\"")
+      [:a
+       {:href "#",
+        :class "block px-4 py-2 text-sm text-gray-700",
+        :role "menuitem",
+        :tabindex "-1",
+        :id "mobile-menu-item-0"}
+       "Edit"]
+      [:a
+       {:href "#",
+        :class "block px-4 py-2 text-sm text-gray-700",
+        :role "menuitem",
+        :tabindex "-1",
+        :id "mobile-menu-item-1"}
+       "View"]]]]])
 
 (defn content [{:keys [email created-at]}]
   [:div
@@ -18,14 +127,15 @@
          {:class "ml-10 flex items-baseline space-x-4"}
          (comment
            "Current: \"bg-gray-900 text-white\", Default: \"text-gray-300 hover:bg-gray-700 hover:text-white\"")
-         [:div
-          {:class "rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
-           :aria-current "page"}
-          "Dashboard"]
          [:a
-          {:href "/products",
+          {:href "/dashboard",
            :class
-           "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"}
+           "rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"}
+          "Dashboard"]
+         [:div
+          {:class
+           "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+           :aria-current "page"}
           "Products"]
          [:a
           {:href "#",
@@ -203,4 +313,8 @@
      {:class "mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"}
      [:h1
       {:class "text-3xl font-bold tracking-tight text-gray-900"}
-      "Guten Tag"]]]])
+      "Produkte List"]]]
+   [:main
+    [:div
+     {:class "mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"}
+     (product-data {:quantity 1 :article-id "H803F-XL" :description "Poloshirt Casual, Gr. XL" :unit-price 17.13})]]])

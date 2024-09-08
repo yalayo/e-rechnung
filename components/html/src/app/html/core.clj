@@ -3,7 +3,8 @@
             [io.pedestal.http.body-params :as body-params]
             [ring.util.response :as response]
             [app.html.index :as index]
-            [app.html.dashboard :as dashboard]))
+            [app.html.dashboard :as dashboard]
+            [app.html.product :as product]))
 
 ;; Prepare the hicup to return it as html
 (defn template [html-body title]
@@ -36,8 +37,17 @@
       (response/redirect "/sign-in")
       (respond-with-params dashboard/content {:email (:email session) :created-at (:created-at session)} "Dashboard"))))
 
+(defn products-handler [context]
+  (let [session (-> context :session)]
+    (if (empty? session)
+      (response/redirect "/sign-in")
+      (respond-with-params product/content {:email (:email session) :created-at (:created-at session)} "Dashboard"))))
+
 (def routes
   #{["/" :get index-page-handler :route-name ::index-page]
     ["/dashboard"
      :get [(body-params/body-params) dashboard-handler]
-     :route-name ::dashboard]})
+     :route-name ::dashboard]
+    ["/products"
+     :get [(body-params/body-params) products-handler]
+     :route-name ::products]})
