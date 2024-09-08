@@ -1,4 +1,5 @@
-(ns app.html.product)
+(ns app.html.product
+  (:require [app.product.interface :as p]))
 
 (defn product-data [product]
   [:div
@@ -53,7 +54,7 @@
      [:button
       {:type "button",
        :class "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-       :hx-post (str "/product/" (:article-id product)) 
+       :hx-post (str "/products/" (:article-id product)) 
        :hx-target "this"
        :hx-swap "outerHTML"}
       [:svg
@@ -319,4 +320,4 @@
    [:main
     [:div
      {:class "mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"}
-     (product-data {:quantity 1 :article-id "H803F-XL" :description "Poloshirt Casual, Gr. XL" :unit-price 17.13})]]])
+     (map product-data (p/get-products))]]])
