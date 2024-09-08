@@ -21,7 +21,8 @@
                               com.github.seancorfield/next.jdbc {:mvn/version "1.3.883"}
                               com.zaxxer/HikariCP {:mvn/version "5.0.1"}
                               com.github.seancorfield/honeysql {:mvn/version "2.4.1066"}
-                              org.flywaydb/flyway-core {:mvn/version "9.21.2"}}}
+                              org.flywaydb/flyway-core {:mvn/version "9.21.2"}
+                              localjar/fmjdbc {:local/root "lib/fmjdbc.jar"}}}
            :test {:extra-paths ["bases/server/test"
                                 "components/invoicerules/test"
                                 "components/invoicepdf/test"
