@@ -1,6 +1,7 @@
 (ns app.html.core
 	(:require [hiccup2.core :as h]
             [io.pedestal.http.body-params :as body-params]
+            [io.pedestal.http.params :as params]
             [ring.util.response :as response]
             [app.html.index :as index]
             [app.html.dashboard :as dashboard]
@@ -43,12 +44,13 @@
       (response/redirect "/sign-in")
       (respond product/content "Products"))))
 
-(defn select-product-handler [context]
-  (let [session (-> context :session)]
-    (if (empty? session)
-      (response/redirect "/sign-in")
-      (println "Item with disabled button")
-      #_(respond-with-params product/content {:email (:email session) :created-at (:created-at session)} "Products"))))
+(def select-product-handler
+  {:name ::get
+   :enter (fn [context]
+            (let [session (-> context :request :session)]
+              (if (empty? session)
+                (response/redirect "/sign-in")
+                (assoc context :response (-> (product/product-selected (-> context :request :path-params :product-id)) (ok))))))})
 
 (def routes
   #{["/" :get index-page-handler :route-name ::index-page]
@@ -59,6 +61,5 @@
      :get [(body-params/body-params) products-handler]
      :route-name ::products]
     ["/products/:product-id"
-     :post [(body-params/body-params)
-           select-product-handler]
+     :get [params/keyword-params select-product-handler]
      :route-name ::select-product]})
