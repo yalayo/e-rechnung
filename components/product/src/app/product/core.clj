@@ -58,12 +58,32 @@
 
 ;; Store selected products temporarily
 ;; What happens if the server gets offline sudently (maybe i should store the selections of the database)
-(def products (atom {}))
+(def slected-products (atom {}))
 
 ;; Query all products
 (defn get-products []
   (let [products (query-products)]
     (map #(assoc % :selected true) products)))
 
+;; Get products (selected or not)
+(defn get-session-products [session-id]
+  (let [products (query-products)
+        selected-products (session-id @slected-products)]
+    (map (fn [product]
+           (if (some #(= % (:article-id product)) selected-products)
+             (assoc product :selected true)
+             (assoc product :selected false))) products)))
+
+(comment
+  ""
+  (get-session-products :123)
+  )
+
 (defn select-product [session-id product-id]
-  (swap! products assoc session-id product-id))
+  (let [session (keyword session-id)
+        products (session @slected-products)]
+    (swap! slected-products assoc session (conj products product-id))))
+
+(comment
+  (select-product "123" "H106F-S")
+  )
