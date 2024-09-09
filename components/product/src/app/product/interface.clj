@@ -7,5 +7,8 @@
 (defn get-products []
   (core/get-products))
 
+(defn get-session-products [session-id]
+  (core/get-session-products session-id))
+
 (defn select-product [session-id product-id]
   (core/select-product session-id product-id))

@@ -94,7 +94,7 @@
         :id "mobile-menu-item-1"}
        "View"]]]]])
 
-(defn content []
+(defn content [session-id]
   [:div
    {:class "min-h-full"}
    [:nav
@@ -301,9 +301,10 @@
    [:main
     [:div
      {:class "mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"}
-     (map product-data (p/get-products))]]])
+     (map product-data (p/get-session-products (keyword session-id)))]]])
 
-(defn product-selected [product-id]
+(defn product-selected [session-id product-id]
+  (p/select-product session-id product-id)
   [:div {:class "flex justify-center items-center h-9"}
    [:svg
     {:class "-ml-0.5 mr-1.5 h-5 w-5",
