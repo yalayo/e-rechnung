@@ -33,8 +33,7 @@
       (catch Exception e
         (println e)))))
 
-;; Query all products
-(defn get-products []
+(defn query-products []
   (let [query (str "SELECT * FROM CCSArtikeldatei")
         columns ["Qty" "ArtNr" "ArtBezeichnung" "Apreis"]
         articles (atom [])]
@@ -56,3 +55,15 @@
       @articles
       (catch Exception e
         (println e)))))
+
+;; Store selected products temporarily
+;; What happens if the server gets offline sudently (maybe i should store the selections of the database)
+(def products (atom {}))
+
+;; Query all products
+(defn get-products []
+  (let [products (query-products)]
+    (map #(assoc % :selected true) products)))
+
+(defn select-product [session-id product-id]
+  (swap! products assoc session-id product-id))

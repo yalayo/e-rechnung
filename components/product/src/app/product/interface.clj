@@ -6,3 +6,6 @@
 
 (defn get-products []
   (core/get-products))
+
+(defn select-product [session-id product-id]
+  (core/select-product session-id product-id))
