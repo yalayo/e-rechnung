@@ -50,7 +50,7 @@
             (let [session (-> context :request :session)]
               (if (empty? session)
                 (response/redirect "/sign-in")
-                (assoc context :response (-> (product/product-selected "test" (-> context :request :path-params :product-id)) (ok))))))})
+                (assoc context :response (-> (product/product-selected (-> context :request :session/key) (-> context :request :path-params :product-id)) (ok))))))})
 
 (def routes
   #{["/" :get index-page-handler :route-name ::index-page]
