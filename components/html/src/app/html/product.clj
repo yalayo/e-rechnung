@@ -2,8 +2,7 @@
   (:require [app.product.interface :as p]))
 
 (defn product-data [product]
-  [:div
-   {:class "lg:flex lg:items-center lg:justify-between"}
+  [:div {:class "lg:flex lg:items-center lg:justify-between gap-x-6 py-5 bg-white hover:bg-gray-100 p-4"}
    [:div
     {:class "min-w-0 flex-1"}
     [:h2
@@ -301,8 +300,7 @@
       {:class "text-3xl font-bold tracking-tight text-gray-900"}
       "Produkte List"]]]
    [:main
-    [:div
-     {:class "mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"}
+    [:div {:class "mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 divide-y divide-gray-100"}
      (map product-data (p/get-session-products (keyword session-id)))]]])
 
 (defn product-selected [session-id product-id]
