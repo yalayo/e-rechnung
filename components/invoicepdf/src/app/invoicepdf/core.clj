@@ -55,4 +55,4 @@
 
 (defn create-invoice [session-id]
 	(let [xml-content (generate-xml)]
-		(generate-pdf session-id)))
+		(generate-pdf (keyword session-id))))
