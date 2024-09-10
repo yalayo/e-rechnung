@@ -11,7 +11,7 @@
     (try
       (let [con (DriverManager/getConnection (str "jdbc:filemaker://" fms-hostname "/" fm-filename)
                                              fm-user fm-password)]
-        (println "Connected to file - CCAdressen")
+        (println "Connected to file - CCSAdressen")
         con)
       (catch Exception e
         (println e))))
