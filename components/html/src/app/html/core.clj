@@ -67,7 +67,10 @@
             (let [session (-> context :request :session)]
               (if (empty? session)
                 (response/redirect "/sign-in")
-                (assoc context :response (-> (customer/customer-selected (-> context :request :session/key) (-> context :request :path-params :customer-id)) (ok))))))})
+                (do
+                  (customer/customer-selected (-> context :request :session/key) (-> context :request :path-params :customer-id))
+                  (assoc context :response {:status 200
+                                            :headers {"HX-Redirect" "/dashboard"}})))))})
 
 (def routes
   #{["/" :get index-page-handler :route-name ::index-page]
