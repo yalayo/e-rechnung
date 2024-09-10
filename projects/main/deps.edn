@@ -14,12 +14,16 @@
         com.github.seancorfield/next.jdbc {:mvn/version "1.3.883"}
         com.zaxxer/HikariCP {:mvn/version "5.0.1"}
         com.github.seancorfield/honeysql {:mvn/version "2.4.1066"}
-        org.flywaydb/flyway-core {:mvn/version "9.21.2"}}
+        org.flywaydb/flyway-core {:mvn/version "9.21.2"}
+      	localjar/fmjdbc {:local/root "../../lib/fmjdbc.jar"}
 
 		;; Bricks
 		poly/invoicerules {:local/root "../../components/invoicerules"}
 		poly/invoicepdf {:local/root "../../components/invoicepdf"}
-		poly/html {:local/root "../../components/html"}
+      	poly/html {:local/root "../../components/html"}
+     	poly/user {:local/root "../../components/user"}
+     	poly/product {:local/root "../../components/product"}
+		poly/customer {:local/root "../../components/customer"}
 		poly/web {:local/root "../../components/web"}
 		poly/server {:local/root "../../bases/server"}}
  :aliases {:test {:extra-paths ["test"]

@@ -1,8 +1,12 @@
 {:aliases {:dev {:extra-paths ["development/src"
                                "bases/server/src"
+                               "bases/server/resources"
                                "components/invoicerules/src"
                                "components/invoicepdf/src"
                                "components/html/src"
+                               "components/user/src"
+                               "components/product/src"
+                               "components/customer/src"
                                "components/web/src"
                                "components/web/resources"]
                  :extra-deps {io.pedestal/pedestal.service {:mvn/version "0.5.9"}
@@ -27,6 +31,9 @@
                                 "components/invoicerules/test"
                                 "components/invoicepdf/test"
                                 "components/html/test"
+                                "components/user/test"
+                                "components/product/test"
+                                "components/customer/test"
                                 "components/web/test"]
                   :extra-deps {polylith-kaocha/kaocha-wrapper
                                {:git/url "https://github.com/imrekoszo/polylith-kaocha"
