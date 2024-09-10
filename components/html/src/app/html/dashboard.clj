@@ -26,17 +26,17 @@
           {:href "/products",
            :class
            "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"}
-          "Products"]
+          "Artikel"]
+         [:a
+          {:href "/customers",
+           :class
+           "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"}
+          "Kunden"]
          [:a
           {:href "#",
            :class
            "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"}
-          "Projects"]
-         [:a
-          {:href "#",
-           :class
-           "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"}
-          "Calendar"]
+          "Rechnungen"] 
          [:a
           {:href "#",
            :class
