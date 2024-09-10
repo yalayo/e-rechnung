@@ -52,9 +52,12 @@
   )
 
 ;; Store temporarily the selected customer
-(def slected-customers (atom {}))
+(def selected-customers (atom {}))
 
 ;; Store in an atom the selected customer
 (defn select-customer [session-id customer-id]
   (let [session (keyword session-id)]
-    (swap! slected-customers assoc session customer-id)))
+    (swap! selected-customers assoc session customer-id)))
+
+(defn get-selected-customer [session-id]
+  ((keyword session-id) @selected-customers))
