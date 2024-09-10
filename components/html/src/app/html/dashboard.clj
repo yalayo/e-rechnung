@@ -36,12 +36,14 @@
           {:href "#",
            :class
            "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"}
-          "Rechnungen"] 
-         [:a
-          {:href "#",
-           :class
-           "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"}
-          "Reports"]]]]
+          "Rechnungen"]
+         [:button
+          {:type "button",
+           :class "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+           :hx-get "/generate-invoice"
+           :hx-target "this"
+           :hx-swap "outerHTML"}
+          "E-Rechnung generieren"]]]]
       [:div
        {:class "hidden md:block"}
        [:div

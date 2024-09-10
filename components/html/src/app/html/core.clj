@@ -3,6 +3,7 @@
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http.params :as params]
             [ring.util.response :as response]
+            [app.invoicepdf.interface :as invoice]
             [app.html.index :as index]
             [app.html.dashboard :as dashboard]
             [app.html.product :as product]
@@ -72,6 +73,16 @@
                   (assoc context :response {:status 200
                                             :headers {"HX-Redirect" "/dashboard"}})))))})
 
+(def generate-invoice-handler
+  {:name ::get
+   :enter (fn [context]
+            (let [session (-> context :request :session)]
+              (if (empty? session)
+                (response/redirect "/sign-in")
+                (assoc context :response {:status 200
+                                          :headers {"Content-Type" "application/pdf" "Content-Disposition" "attachment; filename=invoice.pdf"}
+                                          :body (java.io.ByteArrayInputStream. (invoice/create-invoice (-> context :request :session/key)))}))))})
+
 (def routes
   #{["/" :get index-page-handler :route-name ::index-page]
     ["/dashboard"
@@ -88,4 +99,7 @@
      :route-name ::customers]
     ["/customers/:customer-id"
      :get [params/keyword-params select-customer-handler]
-     :route-name ::select-customer]})
+     :route-name ::select-customer]
+    ["/generate-invoice"
+     :get [generate-invoice-handler]
+     :route-name ::generate-invoice]})
